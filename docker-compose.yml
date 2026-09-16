@@ -1,0 +1,12 @@
+services:
+  api:
+    build: .
+    ports: ["3000:3000"]
+    volumes: ["social_data:/app/data"]
+  worker:
+    build: .
+    command: npm run worker
+    volumes: ["social_data:/app/data"]
+    profiles: ["worker"]
+volumes:
+  social_data:

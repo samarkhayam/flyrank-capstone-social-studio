@@ -1,0 +1,5 @@
+import express from "express";import {z} from "zod";import {repos} from "../db.js";import {make,platforms} from "../services/variants.js";
+const r=express.Router();
+r.post("/",(req,res,next)=>{try{const x=z.object({title:z.string().trim().min(1).max(200),body:z.string().trim().min(1).max(50000),url:z.string().url().optional()}).parse(req.body),now=new Date().toISOString(),q=repos.posts.create.run({title:x.title,body:x.body,url:x.url||null,sourceType:x.url?"url":"markdown",createdAt:now});res.status(201).json(repos.posts.get.get(q.lastInsertRowid))}catch(e){next(e)}});
+r.get("/",(_q,res)=>res.json(repos.posts.list.all()));
+r.post("/:id/generate",(req,res,next)=>{try{const p=repos.posts.get.get(Number(req.params.id));if(!p)return res.status(404).json({error:"Post not found"});const now=new Date().toISOString();for(const platform of platforms)repos.variants.upsert.run({postId:p.id,platform,body:make(platform,p),now});res.status(201).json(repos.variants.list.all().filter(v=>v.post_id===p.id))}catch(e){next(e)}});export default r;

@@ -1,0 +1,3 @@
+export const PROFILES={mock_x:{max:280,minHash:0,maxHash:3},mock_linkedin:{max:3000,minHash:1,maxHash:5},telegram:{max:4096,minHash:0,maxHash:5}};
+export const countHashtags=t=>(t.match(/(^|\s)#[A-Za-z0-9_]+/g)||[]).length;
+export function validateVariant(platform,body){const p=PROFILES[platform];if(!p)return{ok:false,errors:[`Unknown platform: ${platform}`]};const h=countHashtags(body),e=[];if(!body.trim())e.push("body must not be empty");if(body.length>p.max)e.push(`length ${body.length} exceeds ${platform} maximum of ${p.max}`);if(h<p.minHash)e.push(`hashtag count ${h} is below minimum ${p.minHash}`);if(h>p.maxHash)e.push(`hashtag count ${h} exceeds maximum ${p.maxHash}`);return{ok:e.length===0,errors:e};}

@@ -1,0 +1,2 @@
+import {MockXPublisher,MockLinkedInPublisher} from "../adapters/mocks.js"; import {TelegramPublisher} from "../adapters/telegram.js";
+export async function publish(job,v){const a={mock_x:new MockXPublisher(),mock_linkedin:new MockLinkedInPublisher(),telegram:new TelegramPublisher()}[job.adapter];if(!a)throw new Error(`Unknown adapter: ${job.adapter}`);return a.publish({body:v.body,variantId:v.id,idempotencyKey:job.idempotency_key})}

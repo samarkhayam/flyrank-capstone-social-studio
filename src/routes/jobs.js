@@ -1,0 +1,1 @@
+import express from "express";import {repos} from "../db.js";const r=express.Router();r.get("/",(_q,res)=>res.json(repos.jobs.list.all()));r.get("/publish-attempts",(_q,res)=>res.json(repos.attempts.list.all()));export default r;
